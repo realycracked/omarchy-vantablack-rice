@@ -61,6 +61,7 @@ backup="$HOME/.rice-backup/$(date +%Y%m%d-%H%M%S)"
 changed=0; new=0
 while IFS= read -r -d '' f; do
   rel=${f#"$REPO/home/"}; dst="$HOME/$rel"
+  [[ $rel == .config/git/config && -e $dst ]] && continue   # seed only: keep an existing git config
   if [[ -e $dst ]]; then
     cmp -s "$f" "$dst" && continue
     changed=$((changed + 1))
@@ -70,7 +71,8 @@ while IFS= read -r -d '' f; do
   fi
 done < <(find "$REPO/home" -type f -print0)
 note "$new new, $changed updated$( ((changed && !DRY)) && echo ", old versions in $backup")"
-run rsync -a "$REPO/home/" "$HOME/"
+run rsync -a --exclude '/.config/git/config' "$REPO/home/" "$HOME/"
+[[ -e $HOME/.config/git/config ]] || run install -Dm644 "$REPO/home/.config/git/config" "$HOME/.config/git/config"
 # the configs were captured in /home/lucien; point them at this home if it differs
 if [[ $HOME != /home/lucien ]] && ((!DRY)); then
   grep -rlI '/home/lucien' "$REPO/home" | sed "s#^$REPO/home/##" | while read -r rel; do

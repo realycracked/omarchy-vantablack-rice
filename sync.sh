@@ -50,6 +50,7 @@ PATHS=(
   .local/share/zenitsu-wall
   .local/bin/firefox-omarchy-sync
   .local/bin/show-desktop
+  .local/bin/spotify-omarchy-sync
   Pictures/Wallpapers/zenitsu.png
 )
 rm -rf "$REPO/home"; mkdir -p "$REPO/home"
@@ -57,6 +58,12 @@ for p in "${PATHS[@]}"; do
   [[ -e $p ]] || { echo "skip (missing): $p"; continue; }
   rsync -a --relative --exclude '*.bak*' --exclude '.git' --exclude 'mimeinfo.cache' "./$p" "$REPO/home/"
 done
+
+# machine-specific credential helpers (added by `gh auth login`) would break git elsewhere
+if [[ -f $REPO/home/.config/git/config ]]; then
+  awk '/^\[credential/{skip=1; next} /^\[/{skip=0} !skip' "$REPO/home/.config/git/config" > "$REPO/home/.config/git/config.tmp"
+  mv "$REPO/home/.config/git/config.tmp" "$REPO/home/.config/git/config"
+fi
 
 # ---------------------------------------------------------------- packages
 # Explicit packages that a stock Omarchy install doesn't have, plus a few

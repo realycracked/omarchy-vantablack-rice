@@ -1,0 +1,65 @@
+/* ===== Thème Spotify généré depuis le thème Omarchy (couleurs : color.ini) ===== */
+/* Les couleurs internes de Spotify suivent la palette Spicetify. */
+:root, .encore-dark-theme, .encore-dark-theme .encore-base-set,
+.encore-dark-theme .encore-muted-accent-set, .encore-dark-theme .encore-over-media-set,
+.encore-inverted-light-set {
+  --background-base: var(--spice-main) !important;
+  --background-highlight: var(--spice-highlight) !important;
+  --background-press: var(--spice-highlight-elevated) !important;
+  --background-elevated-base: var(--spice-main-elevated) !important;
+  --background-elevated-highlight: var(--spice-highlight) !important;
+  --background-elevated-press: var(--spice-highlight-elevated) !important;
+  --background-tinted-base: var(--spice-card) !important;
+  --background-tinted-highlight: var(--spice-highlight) !important;
+  --background-tinted-press: var(--spice-highlight-elevated) !important;
+  --text-base: var(--spice-text) !important;
+  --text-subdued: var(--spice-subtext) !important;
+  --essential-base: var(--spice-text) !important;
+  --essential-subdued: var(--spice-button-disabled) !important;
+  --decorative-base: var(--spice-text) !important;
+  --decorative-subdued: var(--spice-highlight) !important;
+  --section-background-base: var(--spice-card) !important;
+}
+/* Accent (boutons lecture, liens actifs) = couleur d'accent du thème */
+.encore-dark-theme .encore-bright-accent-set {
+  --background-base: var(--spice-button) !important;
+  --background-highlight: var(--spice-button-active) !important;
+  --background-press: var(--spice-button-active) !important;
+  --text-base: var(--spice-main) !important;
+  --essential-base: var(--spice-button) !important;
+}
+
+/* Fonds unis, panneaux carrés, 2 px entre les panneaux (comme Hyprland) */
+body, .Root, .Root__top-container, .Root__main-view, .Root__nav-bar, .Root__right-sidebar,
+.Root__now-playing-bar, .main-view-container, .main-nowPlayingBar-container,
+.main-topBar-background, .main-home-filterChipsSection {
+  background-color: var(--spice-main) !important;
+}
+.Root__main-view, .Root__nav-bar, .Root__right-sidebar,
+.Root__main-view > div, .Root__nav-bar > div, .Root__right-sidebar > div {
+  border-radius: 0 !important;
+}
+.Root__top-container { gap: 2px !important; padding: 0 !important; }
+.main-nowPlayingView-section { background-color: var(--spice-card) !important; border-radius: 0 !important; }
+
+/* Pas de dégradés de couleur (accueil, albums, playlists, artistes) */
+.main-entityHeader-backgroundColor, .main-actionBarBackground-background, .main-home-homeHeader,
+.x-entityHeader-overlay, .x-entityHeader-backgroundColor, [class*="_backgroundGradient_"] {
+  display: none !important;
+}
+.main-view-container__scroll-node-child > main > div > div[style*="background-color"] {
+  background: none !important;
+  background-color: transparent !important;
+}
+
+/* Lignes et cartes : survol discret */
+.main-trackList-trackListRow:hover, .main-card-card:hover { background-color: var(--spice-highlight) !important; }
+.main-trackList-trackListRow[aria-selected="true"] { background-color: var(--spice-highlight-elevated) !important; }
+.main-card-card { background-color: var(--spice-card) !important; transition: background-color 150ms ease !important; }
+
+/* Barres de progression et de volume à la couleur d'accent */
+.progress-bar { --fg-color: var(--spice-button) !important; --bg-color: var(--spice-misc) !important; }
+
+/* Barre de défilement fine et carrée */
+::-webkit-scrollbar { width: 6px !important; }
+::-webkit-scrollbar-thumb { background: var(--spice-highlight-elevated) !important; border-radius: 0 !important; }

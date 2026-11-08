@@ -31,4 +31,5 @@ steam
 sudo
 superwhisper-bin
 toilet
+wine
 zen-browser-bin

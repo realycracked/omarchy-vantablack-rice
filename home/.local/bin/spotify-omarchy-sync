@@ -1,0 +1,47 @@
+#!/bin/bash
+# Spotify (Spicetify) suit le thème Omarchy, quel qu'il soit (comme omarchy-theme-hook) :
+# génère ~/.config/spicetify/Themes/omarchy/color.ini depuis colors.toml du thème actif,
+# puis applique. Spotify n'est relancé que si les couleurs ont changé.
+set -uo pipefail
+command -v spicetify >/dev/null || exit 0
+COLORS="$HOME/.local/state/omarchy/current/theme/colors.toml"
+THEME_DIR="$HOME/.config/spicetify/Themes/omarchy"
+[[ -f $COLORS ]] || exit 0
+
+c() {  # c clé [secours] -> hex sans #
+  local v
+  v=$(sed -nE "s/^$1[[:space:]]*=[[:space:]]*\"?#?([0-9a-fA-F]{6}).*/\1/p" "$COLORS" | head -1)
+  [[ -n $v ]] && echo "$v" || { [[ -n ${2:-} ]] && c "$2"; }
+}
+
+new=$(cat <<INI
+[base]
+text               = $(c light_foreground foreground)
+subtext            = $(c muted dark_foreground)
+main               = $(c background)
+main-elevated      = $(c darker_background background)
+main-transition    = $(c background)
+highlight          = $(c lighter_background selection)
+highlight-elevated = $(c selection lighter_background)
+sidebar            = $(c background)
+player             = $(c background)
+card               = $(c darker_background background)
+shadow             = 000000
+selected-row       = $(c foreground)
+button             = $(c accent blue)
+button-active      = $(c bright_foreground foreground)
+button-disabled    = $(c dark_foreground muted)
+tab-active         = $(c lighter_background selection)
+notification       = $(c lighter_background selection)
+notification-error = $(c red)
+misc               = $(c dark_foreground muted)
+INI
+)
+
+old=$(cat "$THEME_DIR/color.ini" 2>/dev/null)
+current=$(spicetify config current_theme 2>/dev/null | tail -1 | tr -d '[:space:]')
+[[ $new == "$old" && $current == omarchy ]] && exit 0
+
+printf '%s\n' "$new" >"$THEME_DIR/color.ini"
+spicetify config current_theme omarchy color_scheme base inject_css 1 replace_colors 1 >/dev/null
+spicetify apply >/dev/null 2>&1
