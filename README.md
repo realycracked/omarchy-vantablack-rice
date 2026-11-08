@@ -9,13 +9,25 @@ follows the cursor (with animated rain), theme and background.
 
 ## Install
 
-On a fresh Omarchy (captured on **4.5.0-3**, x86_64):
+On a fresh Omarchy (captured on **4.5.0-3**, x86_64), one line:
 
 ```bash
-git clone <this repo> ~/Work/omarchy-vantablack-rice
-cd ~/Work/omarchy-vantablack-rice
-./install.sh --dry-run   # see what would change
-./install.sh             # do it (asks for sudo for packages)
+curl -fsSL https://raw.githubusercontent.com/realycracked/omarchy-vantablack-rice/main/bootstrap.sh | bash
+```
+
+Preview first, nothing is changed:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/realycracked/omarchy-vantablack-rice/main/bootstrap.sh | bash -s -- --dry-run
+```
+
+Or by hand:
+
+```bash
+git clone https://github.com/realycracked/omarchy-vantablack-rice.git
+cd omarchy-vantablack-rice
+./install.sh --dry-run
+./install.sh
 ```
 
 `install.sh` can be run again at any time:
