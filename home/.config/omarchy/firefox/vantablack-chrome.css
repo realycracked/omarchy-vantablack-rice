@@ -1,0 +1,194 @@
+/* ===== Vantablack — interface Firefox noir absolu ===== */
+:root, #main-window, #navigator-toolbox, toolbar, #nav-bar, #TabsToolbar,
+#PersonalToolbar, #titlebar, #sidebar-box, #sidebar-main, sidebar-main {
+  --vb-black: #000000;
+  --vb-near: #070707;     /* surfaces à peine visibles */
+  --vb-hover: #111111;
+  --vb-line: #141414;     /* bordures quasi invisibles */
+  --vb-text: #b8b8b8;
+  --vb-dim: #5c5c5c;
+  --vb-accent: #e8e8e8;
+
+  --lwt-accent-color: var(--vb-black) !important;
+  --lwt-text-color: var(--vb-text) !important;
+  --toolbox-bgcolor: var(--vb-black) !important;
+  --toolbox-bgcolor-inactive: var(--vb-black) !important;
+  --toolbox-non-lwt-bgcolor: var(--vb-black) !important;
+  --toolbar-bgcolor: var(--vb-black) !important;
+  --toolbar-color: var(--vb-text) !important;
+  --toolbar-field-background-color: var(--vb-near) !important;
+  --toolbar-field-focus-background-color: var(--vb-black) !important;
+  --toolbar-field-color: var(--vb-text) !important;
+  --toolbar-field-focus-color: var(--vb-accent) !important;
+  --toolbar-field-border-color: var(--vb-line) !important;
+  --toolbar-field-focus-border-color: #2a2a2a !important;
+  --tab-selected-bgcolor: var(--vb-near) !important;
+  --tab-selected-textcolor: var(--vb-accent) !important;
+  --tab-hover-background-color: var(--vb-hover) !important;
+  --tab-loading-fill: var(--vb-accent) !important;
+  --tabs-border-color: var(--vb-line) !important;
+  --tabpanel-background-color: var(--vb-black) !important;
+  --chrome-content-separator-color: var(--vb-black) !important;
+  --arrowpanel-background: var(--vb-black) !important;
+  --arrowpanel-color: var(--vb-text) !important;
+  --arrowpanel-border-color: var(--vb-line) !important;
+  --panel-separator-color: var(--vb-line) !important;
+  --urlbarView-highlight-background: var(--vb-hover) !important;
+  --urlbarView-highlight-color: var(--vb-accent) !important;
+  --urlbarView-hover-background: var(--vb-near) !important;
+  --sidebar-background-color: var(--vb-black) !important;
+  --sidebar-text-color: var(--vb-text) !important;
+  --sidebar-border-color: var(--vb-line) !important;
+  --toolbarbutton-hover-background: var(--vb-hover) !important;
+  --toolbarbutton-active-background: #1a1a1a !important;
+  --button-hover-bgcolor: var(--vb-hover) !important;
+  --focus-outline-color: #3a3a3a !important;
+  --background-color-canvas: var(--vb-black) !important;
+  --background-color-box: var(--vb-black) !important;
+  --border-color: var(--vb-line) !important;
+  --text-color: var(--vb-text) !important;
+  --text-color-deemphasized: var(--vb-dim) !important;
+}
+
+/* Barres et fonds */
+#navigator-toolbox, #nav-bar, #TabsToolbar, #titlebar, #PersonalToolbar,
+#toolbar-menubar, #sidebar-box, #sidebar-header, #sidebar-main, sidebar-main,
+#browser, #appcontent, #tabbrowser-tabbox, .browserStack, findbar,
+#statuspanel-label {
+  background: var(--vb-black) !important;
+  background-image: none !important;
+  color: var(--vb-text) !important;
+  border-color: var(--vb-line) !important;
+}
+#navigator-toolbox { border-bottom: 1px solid var(--vb-black) !important; }
+
+/* Onglets : pas d'ombre, contour discret sur l'onglet actif */
+.tab-background { box-shadow: none !important; border-radius: 4px !important; }
+.tabbrowser-tab[selected] .tab-background,
+.tabbrowser-tab[multiselected] .tab-background {
+  background: var(--vb-near) !important;
+  outline: 1px solid var(--vb-line) !important;
+}
+.tabbrowser-tab:not([selected]) .tab-label { color: var(--vb-dim) !important; }
+.tabbrowser-tab:hover .tab-label { color: var(--vb-text) !important; }
+
+/* Barre d'adresse */
+#urlbar-background, #searchbar {
+  background: var(--vb-near) !important;
+  border: 1px solid var(--vb-line) !important;
+  box-shadow: none !important;
+}
+#urlbar[focused] #urlbar-background, #urlbar[open] #urlbar-background {
+  background: var(--vb-black) !important;
+  border-color: #2a2a2a !important;
+}
+.urlbarView, .urlbarView-body-outer { background: var(--vb-black) !important; }
+
+/* Menus et panneaux */
+menupopup, panel, .panel-arrowcontent, .menupopup-arrowscrollbox, panelview {
+  --panel-background: var(--vb-black) !important;
+  --panel-color: var(--vb-text) !important;
+  --panel-border-color: var(--vb-line) !important;
+  --menu-background-color: var(--vb-black) !important;
+  --menu-color: var(--vb-text) !important;
+  --menu-border-color: var(--vb-line) !important;
+  --menuitem-hover-background-color: var(--vb-hover) !important;
+  background-color: var(--vb-black) !important;
+  color: var(--vb-text) !important;
+}
+
+/* Icônes atténuées, plus claires au survol */
+toolbarbutton .toolbarbutton-icon { opacity: 0.7; }
+toolbarbutton:hover .toolbarbutton-icon { opacity: 1; }
+
+/* ===== Accents neutres (plus de violet) ===== */
+:root, #main-window, panel, menupopup, panelview {
+  --color-accent-primary: #d6d6d6 !important;
+  --color-accent-primary-hover: #ececec !important;
+  --color-accent-primary-active: #ffffff !important;
+  --color-accent-primary-selected: #d6d6d6 !important;
+  --button-background-color-primary: #d6d6d6 !important;
+  --button-background-color-primary-hover: #ececec !important;
+  --button-background-color-primary-active: #ffffff !important;
+  --button-text-color-primary: #000 !important;
+  --focus-outline-color: #4a4a4a !important;
+  --toolbarbutton-icon-fill-attention: #d6d6d6 !important;
+  --tab-attention-icon-color: #d6d6d6 !important;
+  --link-color: #c8c8c8 !important;
+  --link-color-hover: #ffffff !important;
+  --link-color-visited: #8a8a8a !important;
+}
+
+/* ===== Plus smooth : surfaces douces, arrondis, transitions ===== */
+:root, #main-window {
+  --vb-near: #0b0b0b; --vb-hover: #151515; --vb-line: #161616; --vb-text: #c4c4c4;
+  --tab-border-radius: 8px !important;
+  --toolbarbutton-border-radius: 8px !important;
+}
+.tab-background, #urlbar-background, #searchbar, toolbarbutton .toolbarbutton-icon,
+toolbarbutton .toolbarbutton-badge-stack, .urlbarView-row, menuitem, .subviewbutton {
+  border-radius: 8px !important;
+  transition: background-color 180ms ease, opacity 180ms ease,
+              color 180ms ease, outline-color 180ms ease, border-color 180ms ease !important;
+}
+#urlbar-background { border-radius: 10px !important; }
+.tab-label, toolbarbutton .toolbarbutton-icon { transition: color 180ms ease, opacity 180ms ease !important; }
+.tabbrowser-tab[selected] .tab-background { outline-color: #1c1c1c !important; }
+toolbarbutton .toolbarbutton-icon { opacity: 0.6; }
+menupopup, panel { --panel-border-radius: 10px !important; }
+
+/* ===== Liste de suggestions de la barre d'adresse (Firefox 158 / Nova) ===== */
+:root, #main-window, #urlbar, .urlbar, .urlbarView {
+  --urlbar-background-color: #0b0b0b !important;
+  --urlbar-background-color-focus: #000000 !important;
+  --urlbar-box-background-color: #0b0b0b !important;
+  --urlbar-box-background-color-focus: #0b0b0b !important;
+  --urlbar-box-background-color-hover: #151515 !important;
+  --urlbar-box-background-color-active: #1c1c1c !important;
+  --urlbarview-background-color-hover: #111111 !important;
+  --urlbarview-background-color-selected: #161616 !important;
+  --urlbarview-text-color-selected: #f0f0f0 !important;
+  --urlbarview-text-color-secondary: #7a7a7a !important;
+  --urlbarview-text-color-action: #9a9a9a !important;
+  --urlbarview-separator-color: #161616 !important;
+  --urlbarview-action-button-background-color: #0b0b0b !important;
+  --urlbarview-action-button-background-color-hover: #151515 !important;
+  --background-color-list-item-hover: #161616 !important;
+  --text-color-list-item-hover: #f0f0f0 !important;
+  --toolbarbutton-background-color-hover: #151515 !important;
+  --toolbarbutton-background-color-active: #1c1c1c !important;
+}
+.urlbarView-background { background-color: #000 !important; border: 1px solid #161616 !important; }
+.urlbarView-row[selected] > .urlbarView-row-inner,
+.urlbarView-row:hover > .urlbarView-row-inner { border-radius: 8px !important; }
+
+/* ===== Liste de la recherche du nouvel onglet en Vantablack ===== */
+#PopupSearchAutoComplete {
+  --panel-background: #000 !important;
+  --panel-color: #b8b8b8 !important;
+  --panel-border-color: #161616 !important;
+  --panel-border-radius: 12px !important;
+  --autocomplete-popup-background: #000 !important;
+  --autocomplete-popup-color: #b8b8b8 !important;
+  --autocomplete-popup-highlight-background: #161616 !important;
+  --autocomplete-popup-highlight-color: #f0f0f0 !important;
+}
+#PopupSearchAutoComplete, #PopupSearchAutoComplete .search-panel-tree,
+#PopupSearchAutoComplete richlistbox {
+  background: #000 !important;
+  color: #b8b8b8 !important;
+  border-color: #161616 !important;
+}
+#PopupSearchAutoComplete .autocomplete-richlistitem {
+  border-radius: 8px !important;
+  margin: 1px 6px !important;
+  padding-block: 5px !important;
+  color: #9a9a9a !important;
+  transition: background-color 150ms ease, color 150ms ease !important;
+}
+#PopupSearchAutoComplete .autocomplete-richlistitem:hover {
+  background: #0f0f0f !important; color: #d0d0d0 !important;
+}
+#PopupSearchAutoComplete .autocomplete-richlistitem[selected] {
+  background: #161616 !important; color: #f0f0f0 !important;
+}

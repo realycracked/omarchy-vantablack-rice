@@ -1,0 +1,4 @@
+ai-usagebar-bin
+blesh-git
+spicetify-cli
+zapzap

@@ -1,0 +1,189 @@
+#!/bin/bash
+
+# Redémarre une seule fois sous Windows en réglant la variable UEFI BootNext.
+# Le chargeur de démarrage (Limine, GRUB, systemd-boot) n'est pas modifié :
+# au redémarrage suivant, l'ordre de démarrage habituel reprend.
+#
+# Usage :
+#   reboot-to-windows [--reboot]   règle BootNext sur Windows puis redémarre
+#   reboot-to-windows --check      affiche « ok|none|error <TAB> numéro <TAB> libellé »
+#   reboot-to-windows --setup      autorise ce réglage sans mot de passe (sudoers)
+#   reboot-to-windows --unsetup    retire cette autorisation
+# Option : --entry XXXX pour forcer un numéro d'entrée EFI.
+
+set -euo pipefail
+
+EFIBOOTMGR=${REBOOT_WINDOWS_EFIBOOTMGR:-/usr/bin/efibootmgr}
+SUDOERS_DIR=${REBOOT_WINDOWS_SUDOERS_DIR:-/etc/sudoers.d}
+
+mode=reboot
+entry=""
+notify_on_check=0
+
+usage() {
+  sed -n '3,13p' "$0" | sed 's/^# \{0,1\}//'
+}
+
+while (( $# )); do
+  case $1 in
+    --reboot) mode=reboot ;;
+    --check) mode=check ;;
+    --notify) notify_on_check=1 ;;
+    --setup) mode=setup ;;
+    --unsetup) mode=unsetup ;;
+    --entry)
+      entry=${2:-}
+      shift
+      ;;
+    -h | --help) usage; exit 0 ;;
+    *) echo "reboot-to-windows : argument inconnu « $1 »" >&2; exit 2 ;;
+  esac
+  shift || true
+done
+
+notify() {
+  local urgency=$1 title=$2 body=${3:-}
+  if command -v omarchy-notification-send >/dev/null 2>&1; then
+    omarchy-notification-send -u "$urgency" -g "" "$title" "$body" >/dev/null 2>&1 || true
+  elif command -v notify-send >/dev/null 2>&1; then
+    notify-send -u "$urgency" "$title" "$body" >/dev/null 2>&1 || true
+  else
+    echo "$title — $body" >&2
+  fi
+}
+
+# Résultat dans les variables globales found_num et found_label.
+# Codes : 0 trouvé, 1 aucune entrée Windows, 2 efibootmgr illisible, 3 numéro invalide.
+find_entry() {
+  found_num=""
+  found_label=""
+
+  local listing
+  if ! listing=$("$EFIBOOTMGR" 2>/dev/null); then
+    return 2
+  fi
+  # efibootmgr 18 sépare le libellé du chemin par une tabulation ; on ne garde que le libellé.
+  local labels
+  labels=$(cut -f1 <<<"$listing" | grep -E '^Boot[0-9A-Fa-f]{4}' || true)
+
+  local line=""
+  if [[ -n $entry ]]; then
+    [[ $entry =~ ^[0-9A-Fa-f]{4}$ ]] || return 3
+    line=$(grep -iE "^Boot${entry}\*?[[:space:]]" <<<"$labels" | head -n1 || true)
+  else
+    # D'abord une entrée active « Windows Boot Manager », puis n'importe quelle entrée Windows.
+    line=$(grep -E '^Boot[0-9A-Fa-f]{4}\*[[:space:]]+Windows Boot Manager' <<<"$labels" | head -n1 || true)
+    [[ -n $line ]] || line=$(grep -E '^Boot[0-9A-Fa-f]{4}\*?[[:space:]]+Windows Boot Manager' <<<"$labels" | head -n1 || true)
+    [[ -n $line ]] || line=$(grep -iE '^Boot[0-9A-Fa-f]{4}\*?[[:space:]]+.*windows' <<<"$labels" | head -n1 || true)
+  fi
+  [[ -n $line ]] || return 1
+
+  found_num=$(sed -E 's/^Boot([0-9A-Fa-f]{4}).*/\1/' <<<"$line")
+  found_num=${found_num^^}
+  found_label=$(sed -E 's/^Boot[0-9A-Fa-f]{4}\*?[[:space:]]+//; s/[[:space:]]+$//' <<<"$line")
+  return 0
+}
+
+explain() {
+  case $1 in
+    1)
+      if [[ -n $entry ]]; then
+        echo "Aucune entrée EFI ne porte le numéro $entry."
+      else
+        echo "Aucune entrée « Windows Boot Manager » dans le firmware. Lancez efibootmgr pour voir les entrées, puis indiquez le bon numéro dans les réglages du widget."
+      fi
+      ;;
+    2) echo "Impossible de lire les entrées EFI (efibootmgr manquant, ou démarrage en mode BIOS ancien)." ;;
+    3) echo "Le numéro d'entrée « $entry » est invalide : il faut 4 caractères hexadécimaux, par exemple 0001." ;;
+  esac
+}
+
+case $mode in
+  check)
+    if find_entry; then
+      printf 'ok\t%s\t%s\n' "$found_num" "$found_label"
+      if (( notify_on_check )); then
+        notify low "Windows détecté" "Entrée EFI Boot$found_num : $found_label"
+      fi
+    else
+      status=$?
+      kind=error
+      (( status == 1 )) && kind=none
+      message=$(explain "$status")
+      printf '%s\t\t%s\n' "$kind" "$message"
+      if (( notify_on_check )); then
+        notify normal "Windows introuvable" "$message"
+      fi
+    fi
+    exit 0
+    ;;
+
+  setup | unsetup)
+    user=$(id -un)
+    [[ $user =~ ^[a-z_][a-z0-9_-]*$ ]] || { echo "Nom d'utilisateur inattendu : $user" >&2; exit 1; }
+    rule_file="$SUDOERS_DIR/50-reboot-windows-$user"
+
+    if [[ $mode == unsetup ]]; then
+      sudo rm -f -- "$rule_file"
+      echo "Autorisation retirée ($rule_file). Le bouton demandera de nouveau le mot de passe."
+      exit 0
+    fi
+
+    status=0
+    find_entry || status=$?
+    if (( status != 0 )); then
+      explain "$status" >&2
+      exit 1
+    fi
+
+    # La règle n'autorise que cette commande exacte, avec ce numéro précis.
+    tmp=$(mktemp)
+    trap 'rm -f "$tmp"' EXIT
+    printf '# Créé par le plugin Omarchy « Redémarrer sous Windows »\n%s ALL=(root) NOPASSWD: %s --bootnext %s\n' \
+      "$user" "$EFIBOOTMGR" "$found_num" >"$tmp"
+
+    echo "Entrée Windows détectée : Boot$found_num ($found_label)"
+    echo "Règle sudo à installer dans $rule_file :"
+    sed -n '2p' "$tmp"
+    echo
+
+    sudo visudo -cqf "$tmp" || { echo "La règle n'a pas passé la vérification de visudo ; rien n'a été installé." >&2; exit 1; }
+    sudo install -m 0440 -o root -g root "$tmp" "$rule_file"
+    echo "C'est fait : le bouton redémarrera sous Windows sans demander de mot de passe."
+    echo "Si l'entrée Windows change de numéro un jour, relancez simplement --setup."
+    exit 0
+    ;;
+
+  reboot)
+    status=0
+    find_entry || status=$?
+    if (( status != 0 )); then
+      notify critical "Redémarrage sous Windows impossible" "$(explain "$status")"
+      exit 1
+    fi
+
+    # Sans mot de passe si --setup a été fait ; sinon, fenêtre polkit d'Omarchy.
+    if ! sudo -n "$EFIBOOTMGR" --bootnext "$found_num" >/dev/null 2>&1; then
+      if ! pkexec "$EFIBOOTMGR" --bootnext "$found_num" >/dev/null 2>&1; then
+        notify normal "Redémarrage annulé" "L'autorisation n'a pas été donnée. Astuce : lancez une fois « reboot-to-windows --setup » pour ne plus avoir de mot de passe à taper."
+        exit 1
+      fi
+    fi
+
+    # On vérifie que le firmware a bien retenu le choix avant de redémarrer.
+    # Sortie lue d'abord : avec pipefail, « efibootmgr | grep -q » peut échouer
+    # quand grep s'arrête avant la fin (SIGPIPE).
+    after=$("$EFIBOOTMGR" 2>/dev/null || true)
+    if ! grep -qiE "^BootNext:[[:space:]]*$found_num\b" <<<"$after"; then
+      notify critical "Redémarrage sous Windows impossible" "Le firmware n'a pas enregistré BootNext=$found_num. Rien n'a été redémarré."
+      exit 1
+    fi
+
+    if command -v omarchy-system >/dev/null 2>&1; then
+      # Ferme proprement les applications, comme le redémarrage du menu Omarchy.
+      omarchy-system reboot
+    else
+      systemctl reboot
+    fi
+    ;;
+esac

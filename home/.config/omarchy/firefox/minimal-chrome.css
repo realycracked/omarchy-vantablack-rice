@@ -1,0 +1,19 @@
+/* ===== Minimaliste (tous thèmes) : pas de barre d'adresse sur le nouvel onglet ===== */
+/* Cachée tant qu'elle est vide et non sélectionnée ; Ctrl+L ou un site la font revenir. */
+#urlbar-container:has(#urlbar:not([focused]):not([open]) :is(#urlbar-input, .urlbar-input):placeholder-shown) {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transition: opacity 180ms ease !important;
+}
+#urlbar-container { transition: opacity 180ms ease !important; }
+
+/* ===== Liste de la recherche du nouvel onglet (#PopupSearchAutoComplete) : épurée ===== */
+#PopupSearchAutoComplete .search-panel-header,
+#PopupSearchAutoComplete .search-panel-one-offs-header,
+#PopupSearchAutoComplete .search-panel-one-offs-container,
+#PopupSearchAutoComplete .search-panel-one-offs,
+#PopupSearchAutoComplete .search-setting-button,
+#PopupSearchAutoComplete .searchbar-separator {
+  display: none !important;
+}
+#PopupSearchAutoComplete .search-one-offs { padding: 0 !important; border: 0 !important; }

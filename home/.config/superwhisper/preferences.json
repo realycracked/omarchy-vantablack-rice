@@ -1,0 +1,15 @@
+{
+  "autoVocabCaptureEnabled": false,
+  "cancelRecordingShortcut": "Escape",
+  "launchAtLogin": true,
+  "linux": {
+    "asrBackend": "auto",
+    "cleanupGpuLayers": 99,
+    "mousePushToTalkShortcut": "",
+    "vocabularyBackend": "auto"
+  },
+  "p2t": false,
+  "pushToTalkShortcut": "",
+  "toggleRecordingShortcut": "Ctrl+Alt+Space",
+  "useDefaultInputDevice": true
+}

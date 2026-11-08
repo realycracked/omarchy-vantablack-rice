@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+Name=VantaMic
+Comment=Use your phone's microphone on this PC, over Wi-Fi
+Comment[fr]=Utilise le micro de ton téléphone sur ce PC, par Wi-Fi
+Exec=/home/lucien/.local/bin/vantamic
+Icon=vantamic
+Terminal=false
+Categories=AudioVideo;Audio;Utility;
+Keywords=microphone;phone;android;wifi;mic;womic;
+Keywords[fr]=micro;microphone;téléphone;android;wifi;
+StartupWMClass=vantamic

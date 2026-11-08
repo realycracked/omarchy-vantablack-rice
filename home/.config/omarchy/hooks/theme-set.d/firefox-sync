@@ -1,0 +1,3 @@
+#!/bin/bash
+# Synchronise Firefox (Vantablack + fond d'écran) avec le thème Omarchy ($1).
+setsid -f "$HOME/.local/bin/firefox-omarchy-sync" >/dev/null 2>&1

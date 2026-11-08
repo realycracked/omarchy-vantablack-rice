@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "id": "pmollaret.reboot-windows",
+  "name": "Redémarrer sous Windows",
+  "version": "1.0.0",
+  "author": "Patrick Mollaret",
+  "description": "Un bouton dans la barre qui redémarre directement sous Windows, une seule fois, sans passer par le menu de démarrage",
+  "kinds": [
+    "bar-widget"
+  ],
+  "entryPoints": {
+    "barWidget": "BarWidget.qml"
+  },
+  "barWidget": {
+    "displayName": "Redémarrer sous Windows",
+    "description": "Clic gauche deux fois : redémarre sous Windows. Clic droit : affiche l'entrée Windows détectée.",
+    "category": "System",
+    "allowMultiple": false,
+    "defaultSection": "right",
+    "defaults": {
+      "confirm": true,
+      "bootEntry": ""
+    },
+    "schema": [
+      {
+        "key": "confirm",
+        "type": "boolean",
+        "label": "Demander un second clic pour confirmer",
+        "defaultValue": true
+      },
+      {
+        "key": "bootEntry",
+        "type": "string",
+        "label": "Numéro d'entrée EFI (facultatif)",
+        "defaultValue": "",
+        "description": "Laisser vide pour détecter Windows Boot Manager automatiquement. Sinon, 4 caractères hexadécimaux, par exemple 0001 (voir efibootmgr)."
+      }
+    ]
+  }
+}

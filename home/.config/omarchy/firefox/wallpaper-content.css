@@ -1,0 +1,70 @@
+/* ===== Fond d'écran du PC sur le nouvel onglet (synchronisé avec Omarchy) ===== */
+@-moz-document url("about:home"), url("about:newtab"), url("about:privatebrowsing") {
+  :root { --newtab-background-color: transparent !important; }
+  html { background: #000 !important; }
+  body {
+    background: url("newtab-bg.jpg") center / cover no-repeat fixed !important;
+  }
+  .outer-wrapper, main, .non-collapsible-section, .body-wrapper, .discovery-stream {
+    background: transparent !important;
+  }
+  /* Cartes et recherche légèrement translucides pour rester lisibles */
+  .search-handoff-button, .search-inner-wrapper input, .top-site-outer .tile,
+  .weather, [class*="weather"] {
+    background-color: rgba(0, 0, 0, 0.55) !important;
+    backdrop-filter: blur(10px) !important;
+  }
+}
+@-moz-document url("about:home"), url("about:newtab"), url("about:privatebrowsing") {
+  .search-inner-wrapper, .search-handoff-button, .search-wrapper input {
+    background-color: rgba(0, 0, 0, 0.6) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-radius: 14px !important;
+    backdrop-filter: blur(12px) !important;
+  }
+}
+
+/* ===== Nouvel onglet ultra-minimaliste : fond d'écran + recherche ===== */
+@-moz-document url("about:home"), url("about:newtab"), url("about:privatebrowsing") {
+  .logo-and-wordmark-wrapper, .logo-and-wordmark, .personalize-button,
+  .weather, [class*="weather"], .top-sites, .top-site-outer, .shortcuts-refresh,
+  .customize-menu, .discovery-stream > :not(.search-wrapper):not([class*="search"]),
+  .wallpaper-attribution, .notification-feed, .downloads-section,
+  [class*="promo"], [class*="message-wrapper"] {
+    display: none !important;
+  }
+  /* recherche centrée verticalement, plus fine */
+  .outer-wrapper { display: flex !important; align-items: center !important; min-height: 100vh !important; }
+  .search-wrapper { padding: 0 !important; margin: 0 auto !important; width: min(560px, 80vw) !important; }
+  .search-inner-wrapper, .search-handoff-button {
+    min-height: 44px !important; opacity: 0.85; transition: opacity 200ms ease !important;
+  }
+  .search-inner-wrapper:hover, .search-handoff-button:hover,
+  .search-inner-wrapper:focus-within, .search-handoff-button:focus { opacity: 1; }
+}
+
+/* ===== Recherche du nouvel onglet : liste épurée (tous thèmes) ===== */
+@-moz-document url("about:home"), url("about:newtab"), url("about:privatebrowsing") {
+  moz-urlbar moz-urlbar-slot[name="search-one-offs"],
+  moz-urlbar .search-one-offs, moz-urlbar .search-panel-header,
+  moz-urlbar .search-panel-one-offs-header, moz-urlbar .search-panel-one-offs-container,
+  moz-urlbar .search-setting-button, moz-urlbar .searchbar-engine-one-off-item {
+    display: none !important;
+  }
+  moz-urlbar .urlbarView-row { font-size: 0.95em !important; }
+}
+
+/* ===== Champ de recherche du nouvel onglet : pas de contour bleu ===== */
+@-moz-document url("about:home"), url("about:newtab"), url("about:privatebrowsing") {
+  .search-wrapper input, .search-wrapper input:focus, .search-wrapper input:focus-visible,
+  .search-inner-wrapper:focus-within, .search-wrapper .search-button:focus-visible {
+    outline: none !important;
+    box-shadow: none !important;
+  }
+  .search-wrapper input {
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-radius: 14px !important;
+    transition: border-color 180ms ease !important;
+  }
+  .search-wrapper input:focus { border-color: rgba(255, 255, 255, 0.22) !important; }
+}

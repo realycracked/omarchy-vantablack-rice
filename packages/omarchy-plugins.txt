@@ -1,0 +1,3 @@
+akitaonrails.ai-usagebar https://github.com/akitaonrails/ai-usagebar.git 59573ff3cb4546781ba8090902e7fc65cedf0ad4
+akshar.radio-atlas https://github.com/AksharP5/omarchy-radio-atlas.git d90f25928c52b18223873526bd6e6ed15769099d
+typecraft.omacast https://github.com/typecraft-dev/oma-cast.git 98bd0bb1cd1adf787afc704ff31f951d3c938708

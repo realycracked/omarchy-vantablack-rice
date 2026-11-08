@@ -1,0 +1,104 @@
+/* ===== Vantablack — pages internes de Firefox ===== */
+@-moz-document url("about:home"), url("about:newtab"), url("about:blank"),
+               url("about:privatebrowsing"), url-prefix("about:") {
+  :root, body {
+    --newtab-background-color: #000 !important;
+    --newtab-background-color-secondary: #070707 !important;
+    --newtab-text-primary-color: #b8b8b8 !important;
+    --newtab-element-hover-color: #111 !important;
+    --newtab-border-color: #141414 !important;
+    --in-content-page-background: #000 !important;
+    --in-content-box-background: #070707 !important;
+    --in-content-box-border-color: #141414 !important;
+    --background-color-canvas: #000 !important;
+    --background-color-box: #070707 !important;
+    --border-color: #141414 !important;
+    background-color: #000 !important;
+  }
+}
+
+/* ===== Accents neutres + douceur sur les pages internes ===== */
+@-moz-document url("about:home"), url("about:newtab"), url("about:privatebrowsing"), url-prefix("about:") {
+  :root, body {
+    --color-accent-primary: #d6d6d6 !important;
+    --color-accent-primary-hover: #ececec !important;
+    --color-accent-primary-active: #ffffff !important;
+    --button-background-color-primary: #d6d6d6 !important;
+    --button-background-color-primary-hover: #ececec !important;
+    --button-text-color-primary: #000 !important;
+    --newtab-primary-action-background: #d6d6d6 !important;
+    --newtab-primary-element-hover-color: #ececec !important;
+    --newtab-primary-element-active-color: #fff !important;
+    --newtab-primary-element-text-color: #000 !important;
+    --link-color: #c8c8c8 !important;
+    --link-color-hover: #fff !important;
+    --link-color-visited: #8a8a8a !important;
+    --focus-outline-color: #4a4a4a !important;
+    --newtab-background-color-secondary: #0b0b0b !important;
+    --newtab-border-color: #161616 !important;
+  }
+  a:visited, a:visited * { color: #8a8a8a !important; }
+  a, button, article, .card, .ds-card, [class*="card"] {
+    transition: background-color 200ms ease, color 200ms ease, transform 200ms ease,
+                box-shadow 200ms ease !important;
+  }
+  .ds-card, article { border-radius: 12px !important; }
+}
+
+/* ===== claude.ai en Vantablack ===== */
+@-moz-document domain("claude.ai") {
+  :root, html[data-mode="dark"], html[data-theme], [data-color-version="v2"][data-theme="claude"][data-mode="dark"] {
+    --bg-000: 0 0% 4.5% !important;   /* cartes, zone de saisie */
+    --bg-100: 0 0% 0% !important;     /* fond principal */
+    --bg-200: 0 0% 2% !important;     /* barre latérale */
+    --bg-300: 0 0% 3% !important;
+    --bg-400: 0 0% 5.5% !important;   /* survols */
+    --bg-500: 0 0% 7% !important;
+    --text-000: 0 0% 90% !important;
+    --text-100: 0 0% 84% !important;
+    --text-200: 0 0% 66% !important;
+    --text-300: 0 0% 60% !important;
+    --text-400: 0 0% 44% !important;
+    --text-500: 0 0% 38% !important;
+    --border-100: 0 0% 22% !important;
+    --border-200: 0 0% 18% !important;
+    --border-300: 0 0% 14% !important;
+    --border-400: 0 0% 10% !important;
+    --accent-000: 0 0% 92% !important;
+    --accent-100: 0 0% 84% !important;
+    --accent-200: 0 0% 76% !important;
+    --accent-900: 0 0% 12% !important;
+  }
+  html, body { background: #000 !important; }
+}
+
+/* ===== Champ de recherche du nouvel onglet (moz-urlbar) en Vantablack ===== */
+@-moz-document url("about:home"), url("about:newtab"), url("about:privatebrowsing") {
+  moz-urlbar, .urlbarView {
+    --urlbar-background-color: rgba(0, 0, 0, 0.6) !important;
+    --urlbar-background-color-focus: #000 !important;
+    --urlbar-box-background-color: #0b0b0b !important;
+    --urlbar-box-background-color-hover: #151515 !important;
+    --urlbar-box-background-color-active: #1c1c1c !important;
+    --urlbarview-background-color-hover: #0f0f0f !important;
+    --urlbarview-background-color-selected: #161616 !important;
+    --urlbarview-text-color-selected: #f0f0f0 !important;
+    --urlbarview-text-color-secondary: #7a7a7a !important;
+    --urlbarview-text-color-action: #9a9a9a !important;
+    --urlbarview-separator-color: #141414 !important;
+    --background-color-list-item-hover: #161616 !important;
+    --text-color-list-item-hover: #f0f0f0 !important;
+    --toolbar-field-border-color-focus: #262626 !important;
+    --toolbar-field-color: #c4c4c4 !important;
+    --toolbar-field-focus-color: #e8e8e8 !important;
+    --focus-outline-color: #262626 !important;
+    --urlbar-background-outline-focused: 1px solid #262626 !important;
+    --urlbar-input-container-outline-open: 1px solid #1c1c1c !important;
+    --urlbar-input-container-outline-open-focused: 1px solid #262626 !important;
+    --urlbar-input-container-border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    color: #c4c4c4 !important;
+  }
+  moz-urlbar .urlbarView-background { background-color: #000 !important; border: 1px solid #161616 !important; }
+  moz-urlbar .urlbarView-row-inner { border-radius: 8px !important; transition: background-color 150ms ease !important; }
+  moz-urlbar .urlbarView-row:not([selected]) .urlbarView-title { color: #9a9a9a !important; }
+}

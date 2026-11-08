@@ -1,0 +1,86 @@
+#!/bin/bash
+# Synchronise Firefox avec Omarchy :
+#  - fond d'écran du PC copié sur le nouvel onglet ;
+#  - style « Vantablack » (Firefox + claude.ai) seulement si le thème Omarchy est vantablack.
+# Firefox ne relit ses CSS qu'au démarrage : s'il tourne et que le style change,
+# il est fermé proprement puis relancé (les onglets sont restaurés).
+# Usage : firefox-omarchy-sync [--no-restart]
+set -uo pipefail
+exec 9>"${XDG_RUNTIME_DIR:-/tmp}/firefox-omarchy-sync-v2.lock"; flock -w 60 9 || exit 1
+
+SRC="$HOME/.config/omarchy/firefox"
+PROFILE="${FIREFOX_PROFILE:-$HOME/.config/mozilla/firefox/wtbl1t1s.default-release}"
+CHROME="$PROFILE/chrome"
+STATE="${OMARCHY_STATE:-$HOME/.local/state/omarchy/current}"
+mkdir -p "$CHROME"
+
+theme=$(tr -d '[:space:]' <"$STATE/theme.name" 2>/dev/null)
+background=$(readlink -f "$STATE/background" 2>/dev/null)
+
+# 1. Fond d'écran (réduit en 2560 px pour rester léger ; une vidéo donne sa 1re image)
+bg_changed=0
+if [[ -f $background && $(cat "$CHROME/.bg-source" 2>/dev/null) != "$background" ]]; then
+  if magick "${background}[0]" -resize '2560x1440^' -quality 88 "$CHROME/newtab-bg.tmp.jpg" 2>/dev/null ||
+     ffmpeg -loglevel error -y -i "$background" -frames:v 1 -vf "scale=2560:-2" "$CHROME/newtab-bg.tmp.jpg"; then
+    mv -f "$CHROME/newtab-bg.tmp.jpg" "$CHROME/newtab-bg.jpg"
+    echo "$background" >"$CHROME/.bg-source"
+    bg_changed=1
+  fi
+fi
+
+# 2. Styles selon le thème
+header="/* Fichier généré par firefox-omarchy-sync (thème Omarchy : ${theme:-?}). Modifier $SRC à la place. */"
+if [[ $theme == vantablack ]]; then
+  chrome_css=$(printf '%s\n' "$header"; cat "$SRC/minimal-chrome.css" "$SRC/vantablack-chrome.css")
+  content_css=$(printf '%s\n' "$header"; cat "$SRC/wallpaper-content.css" "$SRC/vantablack-content.css")
+else
+  chrome_css=$(printf '%s\n' "$header"; cat "$SRC/minimal-chrome.css")
+  content_css=$(printf '%s\n' "$header"; cat "$SRC/wallpaper-content.css")
+fi
+
+style_changed=0
+if [[ $chrome_css != "$(cat "$CHROME/userChrome.css" 2>/dev/null)" ]]; then
+  printf '%s\n' "$chrome_css" >"$CHROME/userChrome.css"; style_changed=1
+fi
+if [[ $content_css != "$(cat "$CHROME/userContent.css" 2>/dev/null)" ]]; then
+  printf '%s\n' "$content_css" >"$CHROME/userContent.css"; style_changed=1
+fi
+
+# 3. Relancer Firefox s'il tourne et que quelque chose a changé
+LOG="${XDG_RUNTIME_DIR:-/tmp}/firefox-omarchy-sync.log"
+log() { echo "$(date +%T) $*" >>"$LOG"; }
+[[ ${1:-} == --no-restart ]] && exit 0
+(( style_changed || bg_changed )) || exit 0
+pgrep -x firefox >/dev/null || exit 0
+log "changement (style=$style_changed fond=$bg_changed, thème=$theme) : redémarrage de Firefox"
+
+for address in $(hyprctl clients -j | jq -r '.[] | select(.class | test("^firefox$"; "i")) | .address'); do
+  hyprctl dispatch "hl.dsp.window.close({ window = \"address:$address\" })" >/dev/null
+done
+for _ in $(seq 1 120); do pgrep -x firefox >/dev/null || break; sleep 0.25; done  # jusqu'à 30 s
+pgrep -x firefox >/dev/null && { log "Firefox ne s'est pas fermé en 30 s"; notify-send "Firefox" "Redémarre Firefox pour appliquer le thème."; exit 0; }
+log "Firefox fermé"
+sleep 1  # laisser Firefox libérer le verrou du profil
+
+# Relancer, et réessayer si aucune fenêtre n'apparaît
+for _ in 1 2 3; do
+  setsid -f uwsm-app -- firefox >/dev/null 2>&1 9>&-  # ne pas transmettre le verrou à Firefox
+  for _ in $(seq 1 20); do
+    if hyprctl clients -j | jq -e '.[] | select(.class | test("^firefox$"; "i"))' >/dev/null; then
+      # Firefox se referme parfois tout seul juste après une relance : vérifier qu'il tient
+      sleep 8
+      if pgrep -x firefox >/dev/null; then
+        log "Firefox relancé"
+        # Filet de sécurité : s'il se referme encore tout seul, le rouvrir
+        ( sleep 20; pgrep -x firefox >/dev/null || { log "Firefox disparu après relance : réouverture"; setsid -f uwsm-app -- firefox >/dev/null 2>&1; } ) 9>&- &
+        disown
+        exit 0
+      fi
+      log "Firefox s'est refermé juste après la relance, nouvel essai"
+      break
+    fi
+    sleep 0.5
+  done
+done
+log "échec de la relance"
+notify-send "Firefox" "Impossible de relancer Firefox automatiquement."

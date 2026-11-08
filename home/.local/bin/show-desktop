@@ -1,0 +1,23 @@
+#!/bin/bash
+# Win+D : interrupteur « afficher le bureau » (comme sous Windows).
+# 1er appui : cache toutes les fenêtres de l'espace de travail courant
+#             dans un espace spécial invisible (special:desktop-<id>).
+# 2e appui  : les ramène. On ne change jamais d'espace de travail.
+ws=$(hyprctl activeworkspace -j | jq -r '.id')
+[[ $ws =~ ^[0-9]+$ ]] || exit 0
+stash="special:desktop-$ws"
+clients=$(hyprctl clients -j)
+
+hidden=$(jq -r --arg n "$stash" '.[] | select(.workspace.name == $n) | .address' <<<"$clients")
+
+move() { hyprctl dispatch "hl.dsp.window.move({ workspace = \"$2\", follow = false, window = \"address:$1\" })" >/dev/null; }
+
+if [[ -n $hidden ]]; then
+  for address in $hidden; do move "$address" "$ws"; done
+else
+  for address in $(jq -r --argjson w "$ws" '.[] | select(.workspace.id == $w) | .address' <<<"$clients"); do
+    move "$address" "$stash"
+  done
+  # Rester sur l'espace de travail courant (vide = bureau).
+  hyprctl dispatch "hl.dsp.focus({ workspace = \"$ws\" })" >/dev/null
+fi

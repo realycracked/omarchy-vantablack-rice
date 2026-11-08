@@ -1,0 +1,9 @@
+[Unit]
+Description=Surveille le fond d'écran Omarchy pour Firefox
+
+[Path]
+PathChanged=%h/.local/state/omarchy/current/background
+PathChanged=%h/.local/state/omarchy/current/theme.name
+
+[Install]
+WantedBy=default.target
