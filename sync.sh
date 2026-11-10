@@ -20,8 +20,6 @@ PATHS=(
   .config/omarchy/defaults
   .config/omarchy/language
   .config/omarchy/secureboot.sh
-  .config/omarchy/plugins/pmollaret.reboot-windows
-  .config/omarchy/plugins/superwhisper-panel
   .config/quickshell/zenitsu
   .config/btop/btop.conf
   .config/git/config
@@ -51,12 +49,19 @@ PATHS=(
   .local/bin/firefox-omarchy-sync
   .local/bin/show-desktop
   .local/bin/spotify-omarchy-sync
+  .local/share/nautilus/scripts
+  .local/share/nautilus-python/extensions
+  .local/state/flea/ui.json
   Pictures/Wallpapers/zenitsu.png
 )
+# every local Omarchy shell plugin (git ones are pinned in packages/omarchy-plugins.txt)
+for d in .config/omarchy/plugins/*/; do
+  [[ -d $d/.git ]] || PATHS+=("${d%/}")
+done
 rm -rf "$REPO/home"; mkdir -p "$REPO/home"
 for p in "${PATHS[@]}"; do
   [[ -e $p ]] || { echo "skip (missing): $p"; continue; }
-  rsync -a --relative --exclude '*.bak*' --exclude '.git' --exclude 'mimeinfo.cache' "./$p" "$REPO/home/"
+  rsync -a --relative --exclude '*.bak*' --exclude '.git' --exclude 'mimeinfo.cache' --exclude '__pycache__' "./$p" "$REPO/home/"
 done
 
 # machine-specific credential helpers (added by `gh auth login`) would break git elsewhere
@@ -84,6 +89,19 @@ for d in .config/omarchy/plugins/*/; do
     echo "$id $url $(git -C "$d" rev-parse HEAD)" >> "$REPO/packages/omarchy-plugins.txt"
   fi
 done
+
+# ---------------------------------------------------------------- GNOME/GTK settings (dconf)
+mkdir -p "$REPO/packages/dconf"
+for path in /org/gnome/nautilus/ /org/gnome/desktop/interface/ /org/gtk/settings/file-chooser/ /org/gtk/gtk4/settings/file-chooser/; do
+  name=$(echo "$path" | tr '/' '_' | sed 's/^_//; s/_$//')
+  out=$(dconf dump "$path" 2>/dev/null || true)
+  [[ -n $out ]] && printf '%s\n' "$out" > "$REPO/packages/dconf/$name.ini"
+done
+
+# ---------------------------------------------------------------- keybindings
+if command -v hyprctl >/dev/null && hyprctl binds -j >/dev/null 2>&1; then
+  hyprctl binds -j | python3 "$REPO/tools/keybindings.py" "$HOME/.config/hypr" > "$REPO/KEYBINDINGS.md"
+fi
 
 # ---------------------------------------------------------------- state
 { echo "theme=$(omarchy theme current 2>/dev/null)"

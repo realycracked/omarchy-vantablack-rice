@@ -41,16 +41,16 @@ cd omarchy-vantablack-rice
 
 | | |
 |---|---|
-| `packages/pacman.txt` | packages a stock Omarchy doesn't have (Steam, Spotify, Zen, Neovim, cmatrix, sl, toilet, asciiquarium, Quickshell shader tools…) |
-| `packages/aur.txt` | ai-usagebar, ble.sh, spicetify, zapzap |
-| `packages/omarchy-plugins.txt` | ai-usagebar, radio-atlas, omacast, each pinned to a commit |
-| `home/.config/omarchy/plugins/` | two local plugins: reboot-to-Windows, Superwhisper panel |
-| `home/.config/hypr/` | Hyprland (Lua): bindings, AZERTY fixes, KDE-style snapping, gaps, autostart |
-| `home/.config/quickshell/zenitsu/` | the animated wallpaper (QML + GLSL depth shader) |
-| `home/.local/share/zenitsu-wall/` | its layers: clean plate, AI depth map, glow, rain sprite |
-| `home/.config/omarchy/` | bar layout (`shell.json`), menu, hooks, Firefox theming, branding |
-| everything else | nvim, btop, foot, spicetify, superwhisper, git, mime types, user services |
-| `tools/make_layers.py` | build wallpaper layers from any image (BiRefNet + Depth Anything V2 Large) |
+| **Keyboard shortcuts** | all 249 bindings listed in [KEYBINDINGS.md](KEYBINDINGS.md), ★ = added or changed here (AZERTY fixes, Firefox, show desktop, flea, finer resizing) |
+| `home/.config/hypr/` | Hyprland (Lua): bindings, AZERTY keys, KDE-style snapping, gaps, layer order, autostart |
+| **Wallpaper** | `home/.config/quickshell/zenitsu/` (QML + GLSL depth shader) and its layers in `home/.local/share/zenitsu-wall/` |
+| **Theme & CSS** | Vantablack + background, Firefox chrome/content CSS (`home/.config/omarchy/firefox/`, kept in sync with the theme by a user service), Spotify via Spicetify (`Themes/omarchy`, follows the Omarchy theme), GTK dark theme and icons (`packages/dconf/`) |
+| **File managers** | [flea](https://github.com/thisisgm/flea) as default (`Super+Shift+F`, also the file picker) with its view settings; Nautilus settings, scripts and extensions |
+| **Omarchy plugins** | from GitHub, pinned: ai-usagebar, radio-atlas, omacast — local: **Minuteur** (timer → notify / suspend / shut down, bar + desktop widget), sysmon, VantaMic, reboot-to-Windows, Superwhisper panel |
+| `home/.config/omarchy/` | bar layout (`shell.json`), menu, hooks, branding, Secure Boot helper |
+| **Packages** | `packages/pacman.txt` (Steam, Spotify, Zen, Neovim, wine, cmatrix, sl, toilet, asciiquarium…), `packages/aur.txt` (ai-usagebar, ble.sh, spicetify, zapzap) |
+| everything else | nvim, btop, foot, superwhisper, ble.sh, git, mime types, user services |
+| `tools/` | `make_layers.py` (wallpaper from any image), `keybindings.py` (KEYBINDINGS.md) |
 
 ## The wallpaper
 
@@ -81,7 +81,7 @@ On the machine this was captured from:
 ## Not automated
 
 - **Claude Code plugins** sync with the Claude account: sign in to Claude and they come back.
-- `~/.local/bin/vantamic` is built from its own project.
+- **VantaMic** (phone mic + camera; its bar plugin is included) is a separate project, built with its PKGBUILD.
 - Secure Boot (`~/.config/omarchy/secureboot.sh`) stays a manual, step-by-step script.
 - Browser profiles, keys and tokens are never captured.
 

@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "id": "pmollaret.minuteur",
+  "name": "Minuteur",
+  "version": "1.0.0",
+  "author": "Patrick Mollaret",
+  "description": "Minuteur dans la barre et sur le bureau : dans X minutes ou à une heure précise, puis notifier, mettre en veille ou éteindre. Tourne en timer systemd, donc survit à un redémarrage du shell.",
+  "kinds": [
+    "service",
+    "bar-widget"
+  ],
+  "keepLoaded": true,
+  "entryPoints": {
+    "service": "Desk.qml",
+    "barWidget": "Panel.qml"
+  },
+  "barWidget": {
+    "displayName": "Minuteur",
+    "description": "Temps restant dans la barre. Clic : régler le minuteur. Clic du milieu : annuler.",
+    "category": "System",
+    "allowMultiple": false,
+    "defaultSection": "right"
+  }
+}

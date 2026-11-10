@@ -147,4 +147,5 @@ local function bind(id, chord, solo, cancel)
   end, {description='Superwhisper: '..id, non_consuming=(solo and not lone_alt) or cancel, ignore_mods=solo or (cancel and chord == 'Escape')})
 end
 bind("toggle", "CTRL+ALT+space", false, false)
+bind("hold", "ALT+Alt_R", true, false)
 bind("cancel", "Escape", false, true)

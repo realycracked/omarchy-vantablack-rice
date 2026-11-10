@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "id": "pmollaret.vantamic",
+  "name": "VantaMic",
+  "version": "1.0.0",
+  "author": "Patrick Mollaret",
+  "description": "Micro et caméra du téléphone dans la barre : état en direct, clic pour ouvrir VantaMic",
+  "kinds": ["bar-widget"],
+  "entryPoints": { "barWidget": "BarWidget.qml" },
+  "barWidget": {
+    "displayName": "VantaMic",
+    "description": "Clic : ouvre VantaMic. Clic droit : coupe ou rétablit le micro. Clic du milieu : allume ou éteint la caméra.",
+    "category": "Media",
+    "allowMultiple": false,
+    "defaultSection": "right",
+    "defaults": {},
+    "schema": []
+  }
+}

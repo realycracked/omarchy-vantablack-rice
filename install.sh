@@ -93,7 +93,7 @@ while read -r id url rev; do
   run git -C "$dir" -c advice.detachedHead=false checkout -q "$rev"
   note "$id @ ${rev:0:7}"
 done < "$REPO/packages/omarchy-plugins.txt"
-note "local plugins: pmollaret.reboot-windows, superwhisper-panel (copied with the configs)"
+note "local plugins (copied with the configs): $(cd "$REPO/home/.config/omarchy/plugins" && ls | tr '\n' ' ')"
 
 # ------------------------------------------------------------------ wallpaper
 say "Animated wallpaper (Quickshell + AI depth)"
@@ -110,6 +110,20 @@ theme=$(state theme | tr '[:upper:] ' '[:lower:]-'); bg="$HOME/$(state backgroun
 [[ $(omarchy theme current 2>/dev/null) == "$(state theme)" ]] && note "already $(state theme)" || run omarchy theme set "$theme"
 [[ -f $bg ]] && run omarchy theme bg set "$bg"
 
+# ------------------------------------------------------------------ GNOME/GTK settings, Firefox theme
+say "GTK, file manager and Firefox theme"
+for f in "$REPO"/packages/dconf/*.ini; do
+  [[ -f $f ]] || continue
+  path="/$(basename "$f" .ini | tr '_' '/')/"
+  run dconf load "$path" < "$f"
+  note "dconf $path"
+done
+if compgen -G "$HOME/.config/mozilla/firefox/*.default*" >/dev/null || compgen -G "$HOME/.mozilla/firefox/*.default*" >/dev/null; then
+  run "$HOME/.local/bin/firefox-omarchy-sync"
+else
+  note "Firefox has no profile yet: its Vantablack CSS is applied on the next theme or wallpaper change"
+fi
+
 # ------------------------------------------------------------------ services, reload
 say "Services and reload"
 run systemctl --user daemon-reload
@@ -125,5 +139,6 @@ fi
 
 say "Done"
 note "Not automated: Claude Code plugins come back when you sign in to Claude;"
-note "~/.local/bin/vantamic is built from its own project (~/Work/vantamic);"
+note "VantaMic (the pmollaret.vantamic plugin needs it) is built from its own project:"
+note "  cd ~/Work/vantamic/pkgbuild && makepkg -si"
 note "Secure Boot stays manual: ~/.config/omarchy/secureboot.sh"

@@ -8,8 +8,8 @@
     "mousePushToTalkShortcut": "",
     "vocabularyBackend": "auto"
   },
-  "p2t": false,
-  "pushToTalkShortcut": "",
+  "p2t": true,
+  "pushToTalkShortcut": "RightAlt",
   "toggleRecordingShortcut": "Ctrl+Alt+Space",
   "useDefaultInputDevice": true
 }

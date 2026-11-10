@@ -1,22 +1,13 @@
 {
-  "version": 1,
-  "idle": {
-    "screensaver": 150,
-    "lock": 300
-  },
   "bar": {
-    "position": "top",
-    "background": "opaque",
+    "background": "none",
     "layout": {
-      "left": [
+      "center": [
         {
-          "id": "omarchy.menu"
-        },
-        {
-          "id": "omarchy.workspaces"
-        },
-        {
-          "id": "akshar.radio-atlas"
+          "format": "dddd HH:mm",
+          "formatAlt": "d MMMM 'W'ww yyyy",
+          "id": "omarchy.clock",
+          "verticalFormat": "HH\n—\nmm"
         }
       ],
       "centerBegin": [
@@ -24,17 +15,8 @@
           "id": "omarchy.indicators"
         }
       ],
-      "center": [
-        {
-          "id": "omarchy.clock",
-          "format": "dddd HH:mm",
-          "formatAlt": "d MMMM 'W'ww yyyy",
-          "verticalFormat": "HH\n—\nmm"
-        }
-      ],
       "centerEnd": [
         {
-          "id": "omarchy.elsewhen",
           "cities": [
             {
               "name": "Paris",
@@ -56,10 +38,14 @@
               "name": "New York",
               "zone": "America/New_York"
             }
-          ]
+          ],
+          "id": "omarchy.elsewhen"
         },
         {
           "id": "omarchy.weather"
+        },
+        {
+          "id": "omarchy.media"
         },
         {
           "id": "akitaonrails.ai-usagebar",
@@ -67,6 +53,20 @@
         },
         {
           "id": "omarchy.system-update"
+        }
+      ],
+      "left": [
+        {
+          "id": "omarchy.menu"
+        },
+        {
+          "id": "omarchy.workspaces"
+        },
+        {
+          "id": "pmollaret.minuteur"
+        },
+        {
+          "id": "akshar.radio-atlas"
         }
       ],
       "right": [
@@ -83,6 +83,9 @@
           "id": "omarchy.agents"
         },
         {
+          "id": "pmollaret.vantamic"
+        },
+        {
           "id": "omarchy.bluetooth"
         },
         {
@@ -95,6 +98,9 @@
           "id": "omarchy.monitor"
         },
         {
+          "id": "pmollaret.sysmon"
+        },
+        {
           "id": "omarchy.power"
         }
       ],
@@ -103,10 +109,10 @@
           "id": "superwhisper.panel"
         }
       ]
-    }
+    },
+    "position": "top"
   },
   "dock": {
-    "position": "bottom",
     "pinned": [
       "org.gnome.Nautilus",
       "chromium",
@@ -115,11 +121,20 @@
       "omawrite",
       "X",
       "YouTube"
-    ]
+    ],
+    "position": "bottom"
+  },
+  "idle": {
+    "lock": 300,
+    "screensaver": 150
   },
   "plugins": [
     {
       "id": "typecraft.omacast"
+    },
+    {
+      "id": "pmollaret.minuteur"
     }
-  ]
+  ],
+  "version": 1
 }

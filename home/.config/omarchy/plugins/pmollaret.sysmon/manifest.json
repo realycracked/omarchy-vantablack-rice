@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "id": "pmollaret.sysmon",
+  "name": "Système",
+  "version": "1.0.0",
+  "author": "Patrick Mollaret",
+  "description": "Processeur et mémoire en direct dans la barre, en Vantablack",
+  "kinds": ["bar-widget"],
+  "entryPoints": { "barWidget": "BarWidget.qml" },
+  "barWidget": {
+    "displayName": "Système",
+    "description": "Processeur et mémoire. Clic : ouvre btop.",
+    "category": "System",
+    "allowMultiple": false,
+    "defaultSection": "right",
+    "defaults": { "interval": 2 },
+    "schema": [
+      { "key": "interval", "type": "number", "label": "Rafraîchissement (secondes)", "defaultValue": 2 }
+    ]
+  }
+}

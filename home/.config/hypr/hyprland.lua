@@ -24,6 +24,7 @@ require("hypr.autostart")
 require("hypr.azerty-keys") -- correctif des raccourcis code:N (AZERTY)
 require("hypr.snap") -- snapping façon KDE en mode flottant
 require("hypr.localsend") -- LocalSend en tiling, opaque
+require("hypr.layers") -- ordre des calques : widgets au-dessus du fond animé
 
 -- Toggle config flags dynamically.
 require("default.hypr.toggles")
